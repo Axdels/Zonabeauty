@@ -156,89 +156,99 @@
       line-height: 1.6;
       max-width: 320px;
     }
+.overlapping-carousel {
+  display: flex;
+  align-items: center;
+  height: 500px;
+  /* Se aumenta el padding derecho a 90px para darle aire a la última tarjeta */
+  padding: 20px 90px 20px 40px; 
+  margin-left: 40px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
 
-    .overlapping-carousel {
-      display: flex;
-      align-items: center;
-      height: 500px;
-      padding: 20px 10px 20px 40px;
-      margin-left: 40px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+.overlapping-carousel::-webkit-scrollbar {
+  display: none;
+}
 
-    .overlapping-carousel::-webkit-scrollbar {
-      display: none;
-    }
+.card-overlap {
+  position: relative;
+  min-width: 260px;
+  height: 440px;
+  margin-right: -70px;
+  border-radius: 28px;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  box-shadow: -15px 10px 30px rgba(0, 0, 0, 0.05);
+  background-color: var(--white);
+  flex-shrink: 0; /* Evita que las tarjetas se deformen si se reduce la pantalla */
+}
 
-    .card-overlap {
-      position: relative;
-      min-width: 260px;
-      height: 440px;
-      margin-right: -70px;
-      border-radius: 28px;
-      overflow: hidden;
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
-      box-shadow: -15px 10px 30px rgba(0, 0, 0, 0.05);
-      background-color: var(--white);
-    }
+/* Elimina el margen negativo en la última tarjeta para que no tape espacio libre */
+.card-overlap:last-child {
+  margin-right: 0;
+}
 
-    .card-overlap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
+.card-overlap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
 
-    .card-overlap:hover {
-      transform: translateY(-20px) scale(1.03);
-      margin-right: 20px;
-      margin-left: 10px;
-      z-index: 10;
-      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.12);
-    }
+.card-overlap:hover {
+  transform: translateY(-20px) scale(1.03);
+  margin-right: 20px;
+  margin-left: 10px;
+  z-index: 10;
+  box-shadow: 0 30px 50px rgba(0, 0, 0, 0.12);
+}
 
-    .card-overlap:hover img {
-      transform: scale(1.08);
-    }
+/* Mantener comportamiento limpio al hacer hover en la última tarjeta */
+.card-overlap:last-child:hover {
+  margin-right: 20px;
+}
 
-    .card-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 25px 20px;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-      color: var(--white);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+.card-overlap:hover img {
+  transform: scale(1.08);
+}
 
-    .tag-pastel {
-      align-self: flex-start;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(12px);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-    }
+.card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 25px 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-    .card-info h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
+.tag-pastel {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
 
-    .card-info .price {
-      font-size: 1.05rem;
-      font-weight: 500;
-      opacity: 0.9;
-    }
+.card-info h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
 
+.card-info .price {
+  font-size: 1.05rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
     /* ==========================================
        PARTE INFERIOR: Los Más Vendidos (Chic)
        ========================================== */
@@ -332,6 +342,8 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
 
+ 
+
     @media (max-width: 900px) {
       .navbar { padding: 20px 25px; }
       .nav-links { display: none; }
@@ -339,6 +351,8 @@
       .overlapping-carousel { margin-left: 0; padding-left: 0; }
       .card-overlap { min-width: 220px; margin-right: -40px; }
     }
+
+
   </style>
 </head>
 <body>
@@ -365,48 +379,43 @@
     
     <!-- PARTE SUPERIOR -->
     <section class="top-section">
-      <div class="left-title-box">
-        <h2>¡Esto es lo nuevo!</h2>
-        <p>Explora nuestras fórmulas exclusivas en formato 9:16. Pasa el cursor sobre cada mosaico para desplegar los detalles.</p>
-      </div>
-
       <div class="overlapping-carousel">
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600" alt="Labial">
-          <div class="card-info">
-            <span class="tag-pastel">Labial Velvet</span>
-            <h3>Rouge Intense Lip Tint</h3>
-            <span class="price">$28.00</span>
-          </div>
-        </div>
+  <div class="card-overlap">
+    <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=600&auto=format&fit=crop" alt="Labial">
+    <div class="card-info">
+      <span class="tag-pastel">Labial Velvet</span>
+      <h3>Rouge Intense Lip Tint</h3>
+      <span class="price">$28.00</span>
+    </div>
+  </div>
 
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600" alt="Crema Facial">
-          <div class="card-info">
-            <span class="tag-pastel">Crema Facial</span>
-            <h3>Hydra-Glow Nectar</h3>
-            <span class="price">$42.00</span>
-          </div>
-        </div>
+  <div class="card-overlap">
+    <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&auto=format&fit=crop" alt="Crema Facial">
+    <div class="card-info">
+      <span class="tag-pastel">Crema Facial</span>
+      <h3>Hydra-Glow Nectar</h3>
+      <span class="price">$42.00</span>
+    </div>
+  </div>
 
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1599733589046-10c005739ef9?w=600" alt="Polvera">
-          <div class="card-info">
-            <span class="tag-pastel">Polvera Silk</span>
-            <h3>Silk Touch Compact</h3>
-            <span class="price">$36.00</span>
-          </div>
-        </div>
+  <div class="card-overlap">
+    <img src="https://images.unsplash.com/photo-1599733589046-10c005739ef9?q=80&w=600&auto=format&fit=crop" alt="Polvera">
+    <div class="card-info">
+      <span class="tag-pastel">Polvera Silk</span>
+      <h3>Silk Touch Compact</h3>
+      <span class="price">$36.00</span>
+    </div>
+  </div>
 
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1608248597260-8f3316f0b8d5?w=600" alt="Serum">
-          <div class="card-info">
-            <span class="tag-pastel">Sérum</span>
-            <h3>Glow Elixir Drops</h3>
-            <span class="price">$52.00</span>
-          </div>
-        </div>
-      </div>
+  <div class="card-overlap">
+    <img src="https://images.unsplash.com/photo-1608248597260-8488e00122e2?q=80&w=600&auto=format&fit=crop" alt="Serum">
+    <div class="card-info">
+      <span class="tag-pastel">Sérum</span>
+      <h3>Glow Elixir Drops</h3>
+      <span class="price">$52.00</span>
+    </div>
+  </div>
+</div>
     </section>
 
     <!-- PARTE INFERIOR CHIC -->
