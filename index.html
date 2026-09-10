@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colección Beauty - Aura Beauty</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    :root {
+      --bg-cream: #faf7f2;
+      --card-pastel-1: #f3e8e1;
+      --card-pastel-2: #e9ece1;
+      --card-pastel-3: #f5e6e8;
+      --text-dark: #211f1e;
+      --text-muted: #78726d;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ==========================================
+       NAVBAR
+       ========================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      z-index: 100;
+      background: rgba(250, 247, 242, 0.7);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: opacity 0.3s;
+    }
+
+    .nav-links a:hover {
+      opacity: 0.6;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ==========================================
+       FONDO THREE.JS EN LA PRIMERA VISTA
+       ========================================== */
+    #webgl-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 20px 60px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 90px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==========================================
+       PARTE SUPERIOR: Novedades + Carrusel Solapado
+       ========================================== */
+    .top-section {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 60px;
+      align-items: center;
+      min-height: calc(100vh - 120px);
+    }
+
+    .left-title-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 3.8rem;
+      line-height: 1.05;
+      color: var(--text-dark);
+      letter-spacing: -1px;
+    }
+
+    .left-title-box p {
+      margin-top: 18px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .overlapping-carousel {
+      display: flex;
+      align-items: center;
+      height: 500px;
+      padding: 20px 10px 20px 40px;
+      margin-left: 40px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .overlapping-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card-overlap {
+      position: relative;
+      min-width: 260px;
+      height: 440px;
+      margin-right: -70px;
+      border-radius: 28px;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      box-shadow: -15px 10px 30px rgba(0, 0, 0, 0.05);
+      background-color: var(--white);
+    }
+
+    .card-overlap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .card-overlap:hover {
+      transform: translateY(-20px) scale(1.03);
+      margin-right: 20px;
+      margin-left: 10px;
+      z-index: 10;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-overlap:hover img {
+      transform: scale(1.08);
+    }
+
+    .card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 25px 20px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tag-pastel {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(12px);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .card-info h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .card-info .price {
+      font-size: 1.05rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    /* ==========================================
+       PARTE INFERIOR: Los Más Vendidos (Chic)
+       ========================================== */
+    .bottom-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 2.8rem;
+      margin-bottom: 35px;
+      color: var(--text-dark);
+    }
+
+    .best-sellers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .chic-card {
+      position: relative;
+      background-color: var(--card-pastel-1);
+      border-radius: 32px;
+      padding: 16px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chic-card:nth-child(2) { background-color: var(--card-pastel-2); }
+    .chic-card:nth-child(3) { background-color: var(--card-pastel-3); }
+
+    .chic-image-box {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .chic-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .chic-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .chic-card:hover .chic-image-box img {
+      transform: scale(1.05);
+    }
+
+    .chic-details {
+      padding: 10px 12px 14px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .chic-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .chic-category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .chic-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .chic-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      background: var(--white);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    @media (max-width: 900px) {
+      .navbar { padding: 20px 25px; }
+      .nav-links { display: none; }
+      .top-section { grid-template-columns: 1fr; }
+      .overlapping-carousel { margin-left: 0; padding-left: 0; }
+      .card-overlap { min-width: 220px; margin-right: -40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="brand-logo">Aura Beauty</div>
+    <ul class="nav-links">
+      <li><a href="#">Novedades</a></li>
+      <li><a href="#">Colección</a></li>
+      <li><a href="#">Fórmulas</a></li>
+      <li><a href="#">Nosotros</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span>Buscar</span>
+      <span>Bolsa (0)</span>
+    </div>
+  </nav>
+
+  <!-- CANVAS THREE.JS EN EL FONDO -->
+  <canvas id="webgl-bg"></canvas>
+
+  <div class="container">
+    
+    <!-- PARTE SUPERIOR -->
+    <section class="top-section">
+      <div class="left-title-box">
+        <h2>¡Esto es lo nuevo!</h2>
+        <p>Explora nuestras fórmulas exclusivas en formato 9:16. Pasa el cursor sobre cada mosaico para desplegar los detalles.</p>
+      </div>
+
+      <div class="overlapping-carousel">
+        <div class="card-overlap">
+          <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600" alt="Labial">
+          <div class="card-info">
+            <span class="tag-pastel">Labial Velvet</span>
+            <h3>Rouge Intense Lip Tint</h3>
+            <span class="price">$28.00</span>
+          </div>
+        </div>
+
+        <div class="card-overlap">
+          <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600" alt="Crema Facial">
+          <div class="card-info">
+            <span class="tag-pastel">Crema Facial</span>
+            <h3>Hydra-Glow Nectar</h3>
+            <span class="price">$42.00</span>
+          </div>
+        </div>
+
+        <div class="card-overlap">
+          <img src="https://images.unsplash.com/photo-1599733589046-10c005739ef9?w=600" alt="Polvera">
+          <div class="card-info">
+            <span class="tag-pastel">Polvera Silk</span>
+            <h3>Silk Touch Compact</h3>
+            <span class="price">$36.00</span>
+          </div>
+        </div>
+
+        <div class="card-overlap">
+          <img src="https://images.unsplash.com/photo-1608248597260-8f3316f0b8d5?w=600" alt="Serum">
+          <div class="card-info">
+            <span class="tag-pastel">Sérum</span>
+            <h3>Glow Elixir Drops</h3>
+            <span class="price">$52.00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTE INFERIOR CHIC -->
+    <section class="bottom-section">
+      <h2>Los más vendidos</h2>
+      
+      <div class="best-sellers-grid">
+        <div class="chic-card">
+          <div class="chic-image-box">
+            <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" alt="Velvet Matte Lipstick">
+          </div>
+          <div class="chic-details">
+            <div class="chic-meta">
+              <span class="chic-category">Maquillaje</span>
+              <h3 class="chic-title">Velvet Matte Lipstick</h3>
+            </div>
+            <span class="chic-price">$28.00</span>
+          </div>
+        </div>
+
+        <div class="chic-card">
+          <div class="chic-image-box">
+            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" alt="Hydrating Face Cream">
+          </div>
+          <div class="chic-details">
+            <div class="chic-meta">
+              <span class="chic-category">Skincare</span>
+              <h3 class="chic-title">Hydrating Face Cream</h3>
+            </div>
+            <span class="chic-price">$42.00</span>
+          </div>
+        </div>
+
+        <div class="chic-card">
+          <div class="chic-image-box">
+            <img src="https://images.unsplash.com/photo-1599733589046-10c005739ef9?w=500" alt="Mineral Powder Compact">
+          </div>
+          <div class="chic-details">
+            <div class="chic-meta">
+              <span class="chic-category">Polvos</span>
+              <h3 class="chic-title">Mineral Powder Compact</h3>
+            </div>
+            <span class="chic-price">$36.00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- SCRIPT THREE.JS -->
+  <script>
+    const canvas = document.querySelector('#webgl-bg');
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Luces suaves
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffe2d1, 1.2);
+    dirLight.position.set(2, 4, 3);
+    scene.add(dirLight);
+
+    // Geometría original Versión 7 (Icosaedro)
+    const geometry = new THREE.IcosahedronGeometry(1.2, 12);
+    
+    const material1 = new THREE.MeshPhysicalMaterial({
+      color: 0xf3e8e1,
+      roughness: 0.2,
+      metalness: 0.1,
+      clearcoat: 0.8,
+      clearcoatRoughness: 0.1
+    });
+
+    const material2 = new THREE.MeshPhysicalMaterial({
+      color: 0xf5e6e8,
+      roughness: 0.3,
+      metalness: 0.05,
+      clearcoat: 0.5
+    });
+
+    const mesh1 = new THREE.Mesh(geometry, material1);
+    mesh1.position.set(-2.8, 0.5, 0);
+    scene.add(mesh1);
+
+    const mesh2 = new THREE.Mesh(geometry, material2);
+    mesh2.position.set(3, -1, -1);
+    mesh2.scale.set(0.7, 0.7, 0.7);
+    scene.add(mesh2);
+
+    // Interacción con el cursor
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth) - 0.5;
+      mouseY = (e.clientY / window.innerHeight) - 0.5;
+    });
+
+    // Animación de rebote acelerada
+    const clock = new THREE.Clock();
+
+    function animate() {
+      const elapsedTime = clock.getElapsedTime();
+
+      // Mismo comportamiento V7 pero rebote más rápido (multiplicador 2.2)
+      mesh1.rotation.x = elapsedTime * 0.3;
+      mesh1.rotation.y = elapsedTime * 0.4;
+      mesh1.position.y = Math.sin(elapsedTime * 4.5) * 0.35 + 0.5;
+
+      mesh2.rotation.x = elapsedTime * -0.2;
+      mesh2.rotation.y = elapsedTime * 0.5;
+      mesh2.position.y = Math.cos(elapsedTime * 2.0) * 0.3 - 1;
+
+      // Movimiento parallax con mouse
+      camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+      camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Responsive Canvas
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
