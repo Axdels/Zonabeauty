@@ -1,694 +1,536 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZUNA Beauty | Maquillaje y Cuidado de la Piel</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <title>Zonabeauty | Productos y Servicios de Belleza</title>
-  <meta name="description" content="Descubre la mejor experiencia en belleza y cuidado personal con Zonabeauty.">
-  <meta name="robots" content="index, follow">
-
-  <!-- Favicon y Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Three.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
   <style>
-    :root {
-      --bg-cream: #faf7f2;
-      --card-pastel-1: #f3e8e1;
-      --card-pastel-2: #e9ece1;
-      --card-pastel-3: #f5e6e8;
-      --text-dark: #211f1e;
-      --text-muted: #78726d;
-      --white: #ffffff;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    body {
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
-
-    body {
-      background-color: var(--bg-cream);
-      color: var(--text-dark);
-      overflow-x: hidden;
-      width: 100%;
+    .font-lip {
+      font-family: 'Great Vibes', cursive;
     }
-
-    /* NAVBAR RESPONSIVO */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 24px;
-      z-index: 100;
-      background: rgba(250, 247, 242, 0.85);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    }
-
-    .brand-logo {
+    .font-playfair {
       font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: -0.5px;
     }
-
-    .nav-links {
-      display: flex;
-      gap: 25px;
-      list-style: none;
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
     }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-dark);
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: opacity 0.3s;
+    ::-webkit-scrollbar-track {
+      background: #fff1f2;
     }
-
-    .nav-actions {
-      display: flex;
-      gap: 15px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
+    ::-webkit-scrollbar-thumb {
+      background: #fda4af;
+      border-radius: 4px;
     }
-
-    /* FONDO THREE.JS */
-    #webgl-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f43f5e;
     }
-
-    /* HERO PARALLAX PORTADA */
-    .hero-parallax-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      height: 100dvh; /* Soporte para navegadores móviles modernos */
-      overflow: hidden;
-      z-index: 2;
-    }
-
-    .hero-image-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    /* GPU Acceleration for GSAP */
+    .gpu-render {
       will-change: transform;
-    }
-
-    .hero-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transition: opacity 0.6s ease-out;
-    }
-
-    .img-before {
-      z-index: 2;
-      opacity: 1;
-    }
-
-    .img-after {
-      z-index: 1;
-      opacity: 1;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(250,247,242,0.85) 88%, var(--bg-cream) 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: var(--white);
-      padding: 0 20px;
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 3.8rem;
-      line-height: 1.1;
-      margin-bottom: 12px;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-
-    .hero-subtitle {
-      font-size: 0.95rem;
-      font-weight: 500;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      margin-bottom: 25px;
-    }
-
-    .scroll-indicator {
-      position: absolute;
-      bottom: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      opacity: 0.85;
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-8px); }
-      60% { transform: translateY(-4px); }
-    }
-
-    /* CONTENIDO PRINCIPAL */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 20px 60px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 70px;
-      position: relative;
-      z-index: 3;
-    }
-
-    /* SECCIÓN SUPERIOR */
-    .top-section {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 40px;
-      align-items: center;
-    }
-
-    .left-title-box h2 {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 3.2rem;
-      line-height: 1.05;
-      color: var(--text-dark);
-      letter-spacing: -1px;
-    }
-
-    .left-title-box p {
-      margin-top: 14px;
-      color: var(--text-muted);
-      font-size: 0.98rem;
-      line-height: 1.6;
-      max-width: 320px;
-    }
-
-    .overlapping-carousel {
-      display: flex;
-      align-items: center;
-      height: 460px;
-      padding: 20px 40px 20px 20px; 
-      margin-left: 20px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .overlapping-carousel::-webkit-scrollbar {
-      display: none;
-    }
-
-    .card-overlap {
-      position: relative;
-      min-width: 240px;
-      height: 400px;
-      margin-right: -60px;
-      border-radius: 24px;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
-      box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.06);
-      background-color: var(--white);
-      flex-shrink: 0;
-    }
-
-    .card-overlap:last-child {
-      margin-right: 0;
-    }
-
-    .card-overlap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .card-overlap:hover,
-    .card-overlap:active {
-      transform: translateY(-12px) scale(1.02);
-      margin-right: 15px;
-      margin-left: 5px;
-      z-index: 10;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .card-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 20px 16px;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-      color: var(--white);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .tag-pastel {
-      align-self: flex-start;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .card-info h3 {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .card-info .price {
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
-
-    /* SECCIÓN INFERIOR CHIC */
-    .bottom-section h2 {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 2.5rem;
-      margin-bottom: 25px;
-      color: var(--text-dark);
-    }
-
-    .best-sellers-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-    }
-
-    .chic-card {
-      position: relative;
-      background-color: var(--card-pastel-1);
-      border-radius: 28px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .chic-card:nth-child(2) { background-color: var(--card-pastel-2); }
-    .chic-card:nth-child(3) { background-color: var(--card-pastel-3); }
-
-    .chic-image-box {
-      position: relative;
-      width: 100%;
-      height: 320px;
-      border-radius: 20px;
-      overflow: hidden;
-      background: var(--white);
-    }
-
-    .chic-image-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .chic-details {
-      padding: 6px 8px 10px 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-
-    .chic-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .chic-category {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .chic-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-    }
-
-    .chic-price {
-      font-size: 1rem;
-      font-weight: 700;
-      background: var(--white);
-      padding: 6px 14px;
-      border-radius: 16px;
-    }
-
-    /* AJUSTES ESPECÍFICOS PARA DISPOSITIVOS MÓVILES (< 900px) */
-    @media (max-width: 900px) {
-      .navbar {
-        padding: 15px 20px;
-      }
-      
-      .nav-links {
-        display: none; /* Oculta enlaces secundarios en pantallas pequeñas */
-      }
-
-      .hero-title {
-        font-size: 2.6rem;
-      }
-
-      .hero-subtitle {
-        font-size: 0.8rem;
-        letter-spacing: 1.5px;
-      }
-
-      .top-section {
-        grid-template-columns: 1fr;
-        gap: 25px;
-      }
-
-      .left-title-box h2 {
-        font-size: 2.6rem;
-      }
-
-      .overlapping-carousel {
-        margin-left: 0;
-        padding-left: 10px;
-        height: 380px;
-      }
-
-      .card-overlap {
-        min-width: 200px;
-        height: 340px;
-        margin-right: -30px;
-      }
-
-      .container {
-        padding-top: 40px;
-        gap: 50px;
-      }
+      transform: translateZ(0);
     }
   </style>
 </head>
-<body>
+<body class="bg-white text-slate-800 antialiased selection:bg-rose-200 selection:text-rose-900">
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="brand-logo">Aura Beauty</div>
-    <ul class="nav-links">
-      <li><a href="#">Novedades</a></li>
-      <li><a href="#">Colección</a></li>
-      <li><a href="#">Fórmulas</a></li>
-      <li><a href="#">Nosotros</a></li>
-    </ul>
-    <div class="nav-actions">
-      <span>Buscar</span>
-      <span>Bolsa (0)</span>
+  <nav class="fixed top-0 left-0 w-full z-40 bg-white/80 backdrop-blur-md border-b border-rose-100 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2 group">
+        <i data-lucide="sparkles" class="w-6 h-6 text-rose-500 animate-pulse"></i>
+        <span class="font-playfair text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+          ZUNA <span class="font-lip text-rose-600 font-normal">Beauty</span>
+        </span>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
+        <a href="#inicio" class="hover:text-rose-600 transition-colors">Inicio</a>
+        <a href="#catalogo" class="hover:text-rose-600 transition-colors">Colección</a>
+        <a href="#nosotros" class="hover:text-rose-600 transition-colors">Experiencia ZUNA</a>
+      </div>
+
+      <!-- Cart Button -->
+      <button id="open-cart-btn" class="relative flex items-center gap-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white px-5 py-2.5 rounded-full font-semibold transition-all duration-300 border border-rose-200 shadow-sm hover:shadow-md">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <span class="hidden sm:inline">Carrito</span>
+        <span id="cart-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce">0</span>
+      </button>
     </div>
   </nav>
 
-  <!-- CANVAS THREE.JS EN EL FONDO -->
-  <canvas id="webgl-bg"></canvas>
-
-  <!-- PORTADA HERO PARALLAX -->
-  <section class="hero-parallax-wrapper" id="heroSection">
-    <div class="hero-image-container" id="heroImageContainer">
-      <!-- Imagen Sin Maquillaje -->
-      <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200&auto=format&fit=crop" alt="Sin Maquillaje" class="hero-image img-before" id="imgBefore">
-      <!-- Imagen Con Maquillaje -->
-      <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop" alt="Con Maquillaje" class="hero-image img-after" id="imgAfter">
-    </div>
-
-    <div class="hero-overlay">
-      <span class="hero-subtitle">La belleza de ser tú misma</span>
-      <h1 class="hero-title">Transforma tu Esencia</h1>
+  <!-- HERO SECTION WITH COMPACT FLOATING BODEGON -->
+  <section id="inicio" class="pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-b from-rose-50/50 via-white to-pink-50/30 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
       
-      <div class="scroll-indicator">
-        <span>Desliza hacia abajo</span>
-        <span>↓</span>
+      <!-- Text Content -->
+      <div class="space-y-6 text-center md:text-left z-10">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-100/80 text-rose-700 text-xs font-semibold tracking-wider uppercase">
+          <i data-lucide="sparkles" class="w-4 h-4 text-rose-500"></i> Nueva Colección Velvet Red
+        </div>
+        <h1 class="font-playfair text-4xl sm:text-6xl font-bold text-slate-900 leading-tight">
+          Resalta tu Belleza <br />
+          <span class="font-lip text-rose-600 text-5xl sm:text-7xl font-normal block mt-2">
+            con elegancia y actitud
+          </span>
+        </h1>
+        <p class="text-slate-600 text-base sm:text-lg max-w-lg mx-auto md:mx-0 font-light">
+          Formulaciones exclusivas, tonos pastel radiantes y pigmentos intensos. Diseñados para potenciar tu esencia natural día a día.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
+          <a href="#catalogo" class="inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-rose-300 transition-all transform hover:-translate-y-0.5">
+            Explorar Productos <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Compact & Proportional Floating Composition -->
+      <div id="hero-floating-container" class="relative w-full h-[320px] sm:h-[420px] flex items-center justify-center select-none">
+        <!-- Glow Circle Behind -->
+        <div class="absolute w-64 h-64 sm:w-80 sm:h-80 bg-gradient-to-tr from-rose-300/40 via-pink-200/30 to-rose-100/20 rounded-full filter blur-2xl -z-10"></div>
+        
+        <div class="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center">
+          <!-- Image 1: Labial Velvet (Detrás - Izquierda) -->
+          <img 
+            id="img-labial" 
+            src="https://i.ibb.co/jk39L5tJ/labial.png" 
+            alt="Labial Velvet ZUNA" 
+            class="gpu-render absolute z-10 w-28 sm:w-36 -translate-x-16 -translate-y-4 drop-shadow-xl object-contain pointer-events-none"
+          />
+
+          <!-- Image 2: Diosr Lipstick (Principal - Centro) -->
+          <img 
+            id="img-diosr" 
+            src="https://i.ibb.co/sJQJTPxB/diosrlipstick.png" 
+            alt="Dior Lipstick ZUNA" 
+            class="gpu-render absolute z-20 w-32 sm:w-44 translate-x-2 translate-y-2 drop-shadow-2xl object-contain pointer-events-none"
+          />
+
+          <!-- Image 3: Brocha de Maquillaje (Derecha - Abajo) -->
+          <img 
+            id="img-brocha" 
+            src="https://i.ibb.co/Xk6bSD71/brocha.png" 
+            alt="Brocha Profesional ZUNA" 
+            class="gpu-render absolute z-30 w-28 sm:w-36 translate-x-16 translate-y-12 drop-shadow-lg object-contain pointer-events-none"
+          />
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CATALOG SECTION -->
+  <section id="catalogo" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 class="font-playfair text-3xl sm:text-5xl font-bold text-slate-900 mb-4">
+          Nuestros <span class="font-lip text-rose-600 text-4xl sm:text-6xl">Favoritos</span>
+        </h2>
+        <p class="text-slate-600">
+          Descubre nuestra línea exclusiva de maquillajes y cuidado facial formulados para lucir un acabado radiante.
+        </p>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Dynaimcally inserted by JS -->
       </div>
     </div>
   </section>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <div class="container">
-    
-    <!-- SECCIÓN DE PRODUCTOS DESTACADOS -->
-    <section class="top-section">
-      <div class="left-title-box">
-        <h2>¡Esto es lo nuevo!</h2>
-        <p>Explora nuestras fórmulas exclusivas. Desliza para explorar cada producto.</p>
+  <!-- ABOUT SECTION -->
+  <section id="nosotros" class="py-20 bg-rose-50/40 border-y border-rose-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+      <div class="relative rounded-3xl overflow-hidden shadow-xl">
+        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=800" alt="ZUNA Beauty Concept" class="w-full h-auto object-cover">
       </div>
-
-      <div class="overlapping-carousel">
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=600&auto=format&fit=crop" alt="Labial">
-          <div class="card-info">
-            <span class="tag-pastel">Labial Velvet</span>
-            <h3>Rouge Intense Lip Tint</h3>
-            <span class="price">$28.00</span>
+      <div class="space-y-6">
+        <span class="text-rose-600 font-semibold tracking-wider text-sm uppercase">Experiencia ZUNA</span>
+        <h2 class="font-playfair text-3xl sm:text-4xl font-bold text-slate-900">
+          Belleza consciente creada para empoderar tu rostro
+        </h2>
+        <p class="text-slate-600 leading-relaxed">
+          En ZUNA Beauty combinamos ingredientes de primera calidad con tonos pensados para adaptarse a cada piel. Todos nuestros productos son 100% libres de crueldad animal y probados dermatológicamente.
+        </p>
+        <div class="grid grid-cols-2 gap-4 pt-4">
+          <div class="p-4 bg-white rounded-2xl border border-rose-100 shadow-sm">
+            <i data-lucide="heart" class="w-6 h-6 text-rose-500 mb-2"></i>
+            <h4 class="font-bold text-slate-900">Cruelty Free</h4>
+            <p class="text-xs text-slate-500">Nunca probado en animales</p>
           </div>
-        </div>
-
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&auto=format&fit=crop" alt="Crema Facial">
-          <div class="card-info">
-            <span class="tag-pastel">Crema Facial</span>
-            <h3>Hydra-Glow Nectar</h3>
-            <span class="price">$42.00</span>
-          </div>
-        </div>
-
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1599733589046-10c005739ef9?q=80&w=600&auto=format&fit=crop" alt="Polvera">
-          <div class="card-info">
-            <span class="tag-pastel">Polvera Silk</span>
-            <h3>Silk Touch Compact</h3>
-            <span class="price">$36.00</span>
-          </div>
-        </div>
-
-        <div class="card-overlap">
-          <img src="https://images.unsplash.com/photo-1608248597260-8488e00122e2?q=80&w=600&auto=format&fit=crop" alt="Serum">
-          <div class="card-info">
-            <span class="tag-pastel">Sérum</span>
-            <h3>Glow Elixir Drops</h3>
-            <span class="price">$52.00</span>
+          <div class="p-4 bg-white rounded-2xl border border-rose-100 shadow-sm">
+            <i data-lucide="sparkles" class="w-6 h-6 text-rose-500 mb-2"></i>
+            <h4 class="font-bold text-slate-900">Fórmula Premium</h4>
+            <p class="text-xs text-slate-500">Ingredientes de alta calidad</p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SECCIÓN CHIC -->
-    <section class="bottom-section">
-      <h2>Los más vendidos</h2>
-      
-      <div class="best-sellers-grid">
-        <div class="chic-card">
-          <div class="chic-image-box">
-            <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" alt="Velvet Matte Lipstick">
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+      <a href="#" class="inline-flex items-center gap-2">
+        <i data-lucide="sparkles" class="w-6 h-6 text-rose-400"></i>
+        <span class="font-playfair text-2xl font-bold text-white">
+          ZUNA <span class="font-lip text-rose-400 font-normal">Beauty</span>
+        </span>
+      </a>
+      <p class="text-slate-400 text-sm max-w-md mx-auto">
+        Maquillaje chic y cosmética formulada para realzar lo mejor de ti.
+      </p>
+      <p class="text-slate-500 text-xs">
+        &copy; 2026 ZUNA Beauty C.A. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <!-- CART DRAWER / MODAL -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <!-- Backdrop -->
+    <div id="cart-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity opacity-0"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div id="cart-content" class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+        
+        <!-- Header -->
+        <div class="p-6 border-b border-rose-100 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shopping-bag" class="w-6 h-6 text-rose-600"></i>
+            <h2 class="font-playfair text-xl font-bold text-slate-900">Tu Carrito ZUNA</h2>
           </div>
-          <div class="chic-details">
-            <div class="chic-meta">
-              <span class="chic-category">Maquillaje</span>
-              <h3 class="chic-title">Velvet Matte Lipstick</h3>
-            </div>
-            <span class="chic-price">$28.00</span>
-          </div>
+          <button id="close-cart-btn" class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
         </div>
 
-        <div class="chic-card">
-          <div class="chic-image-box">
-            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" alt="Hydrating Face Cream">
-          </div>
-          <div class="chic-details">
-            <div class="chic-meta">
-              <span class="chic-category">Skincare</span>
-              <h3 class="chic-title">Hydrating Face Cream</h3>
-            </div>
-            <span class="chic-price">$42.00</span>
-          </div>
+        <!-- Items List -->
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+          <!-- Items inserted dynamically -->
         </div>
 
-        <div class="chic-card">
-          <div class="chic-image-box">
-            <img src="https://images.unsplash.com/photo-1599733589046-10c005739ef9?w=500" alt="Mineral Powder Compact">
+        <!-- Footer Checkout -->
+        <div id="cart-footer" class="p-6 border-t border-rose-100 bg-rose-50/30 space-y-4">
+          <div class="flex items-center justify-between font-bold text-lg text-slate-900">
+            <span>Total Estimado:</span>
+            <span id="cart-total-price" class="text-rose-600">$0.00</span>
           </div>
-          <div class="chic-details">
-            <div class="chic-meta">
-              <span class="chic-category">Polvos</span>
-              <h3 class="chic-title">Mineral Powder Compact</h3>
-            </div>
-            <span class="chic-price">$36.00</span>
-          </div>
+          <button id="whatsapp-checkout-btn" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-full font-bold shadow-lg transition-all hover:shadow-emerald-200">
+            <i data-lucide="send" class="w-5 h-5"></i> Terminar pedido en WhatsApp
+          </button>
         </div>
+
       </div>
-    </section>
-
+    </div>
   </div>
 
-  <!-- SCRIPT PARALLAX OPTIMIZADO PARA MÓVIL Y DESKTOP -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    const imgBefore = document.getElementById('imgBefore');
-    const heroImageContainer = document.getElementById('heroImageContainer');
+    // 1. DATA & STATE MANAGEMENT
+    const WHATSAPP_NUMBER = "584121234567";
 
-    // Control de scroll fluido para pantalla táctil y escritorio
-    window.addEventListener('scroll', () => {
-      const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-
-      // Progreso de opacidad entre 0 y 1
-      let progress = scrollPosition / (windowHeight * 0.65);
-      if (progress > 1) progress = 1;
-      if (progress < 0) progress = 0;
-
-      imgBefore.style.opacity = 1 - progress;
-
-      // Parallax suave
-      if (scrollPosition <= windowHeight) {
-        heroImageContainer.style.transform = `translateY(${scrollPosition * 0.25}px)`;
+    const PRODUCTS = [
+      {
+        id: '1',
+        name: 'Velvet Matte Lipstick #04 Velvet Red',
+        category: 'Labiales',
+        priceUSD: 16.50,
+        rating: 4.9,
+        reviewsCount: 142,
+        image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=600',
+        description: 'Labial mate de alta pigmentación en tono rojo velvet con textura suave y acabado aterciopelado.'
+      },
+      {
+        id: '2',
+        name: 'Glow Botanical Hydrating Serum',
+        category: 'Cuidado Facial',
+        priceUSD: 22.00,
+        rating: 4.8,
+        reviewsCount: 98,
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=600',
+        description: 'Sérum hidratante con ácido hialurónico y extractos florales para una piel luminosa.'
+      },
+      {
+        id: '3',
+        name: 'Rose Powder Blush & Highlight',
+        category: 'Rostro',
+        priceUSD: 18.00,
+        rating: 5.0,
+        reviewsCount: 215,
+        image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=600',
+        description: 'Rubor compacto en tono rosa pastel con destellos sutiles para resaltar tus pómulos.'
+      },
+      {
+        id: '4',
+        name: 'Silk Touch Foundation SPF 30',
+        category: 'Rostro',
+        priceUSD: 24.50,
+        rating: 4.7,
+        reviewsCount: 86,
+        image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600',
+        description: 'Base de maquillaje de cobertura media adaptable con protección solar.'
+      },
+      {
+        id: '5',
+        name: 'Lash Miracle Volumizing Mascara',
+        category: 'Ojos',
+        priceUSD: 14.00,
+        rating: 4.9,
+        reviewsCount: 170,
+        image: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?auto=format&fit=crop&q=80&w=600',
+        description: 'Máscara de pestañas resistente al agua que otorga volumen extremo sin grumos.'
+      },
+      {
+        id: '6',
+        name: 'Crystal Gloss Lip Oil',
+        category: 'Labiales',
+        priceUSD: 12.50,
+        rating: 4.8,
+        reviewsCount: 110,
+        image: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&q=80&w=600',
+        description: 'Aceite de labios nutritivo e hidratante con acabado brillante y no pegajoso.'
       }
-    });
+    ];
 
-    // Transición de presentación automática inicial (Intro)
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        let op = 1;
-        const fadeInterval = setInterval(() => {
-          if (op <= 0.25) {
-            clearInterval(fadeInterval);
-          } else {
-            op -= 0.05;
-            imgBefore.style.opacity = op;
-          }
-        }, 70);
-      }, 1200);
-    });
-  </script>
+    let cart = [];
 
-  <!-- SCRIPT THREE.JS -->
-  <script>
-    const canvas = document.querySelector('#webgl-bg');
-    const scene = new THREE.Scene();
+    // 2. RENDER PRODUCTS
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = PRODUCTS.map(prod => `
+        <div class="group bg-rose-50/30 rounded-3xl overflow-hidden border border-rose-100 hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+          <div class="relative overflow-hidden aspect-square bg-slate-100">
+            <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-4 left-4 bg-rose-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+              ${prod.category}
+            </span>
+          </div>
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5;
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-1 text-amber-500 mb-2">
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <span class="text-xs font-bold text-slate-700">${prod.rating}</span>
+                <span class="text-xs text-slate-400">(${prod.reviewsCount})</span>
+              </div>
+              <h3 class="font-playfair font-bold text-lg text-slate-900 mb-2">${prod.name}</h3>
+              <p class="text-slate-600 text-sm mb-4 line-clamp-2">${prod.description}</p>
+            </div>
 
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            <div class="flex items-center justify-between pt-4 border-t border-rose-100">
+              <div>
+                <span class="text-xs text-slate-400 block">Precio</span>
+                <span class="font-bold text-slate-900 text-xl">$${prod.priceUSD.toFixed(2)}</span>
+              </div>
+              <button onclick="addToCart('${prod.id}')" class="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold transition-all shadow-md active:scale-95">
+                <i data-lucide="plus" class="w-4 h-4"></i> Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-    scene.add(ambientLight);
-
-    const dirLight = new THREE.DirectionalLight(0xffe2d1, 1.2);
-    dirLight.position.set(2, 4, 3);
-    scene.add(dirLight);
-
-    const geometry = new THREE.IcosahedronGeometry(1.2, 12);
-    
-    const material1 = new THREE.MeshPhysicalMaterial({
-      color: 0xf3e8e1,
-      roughness: 0.2,
-      metalness: 0.1,
-      clearcoat: 0.8
-    });
-
-    const material2 = new THREE.MeshPhysicalMaterial({
-      color: 0xf5e6e8,
-      roughness: 0.3,
-      metalness: 0.05
-    });
-
-    const mesh1 = new THREE.Mesh(geometry, material1);
-    mesh1.position.set(-2.8, 0.5, 0);
-    scene.add(mesh1);
-
-    const mesh2 = new THREE.Mesh(geometry, material2);
-    mesh2.position.set(3, -1, -1);
-    mesh2.scale.set(0.7, 0.7, 0.7);
-    scene.add(mesh2);
-
-    let mouseX = 0;
-    let mouseY = 0;
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = (e.clientX / window.innerWidth) - 0.5;
-      mouseY = (e.clientY / window.innerHeight) - 0.5;
-    });
-
-    const clock = new THREE.Clock();
-
-    function animate() {
-      const elapsedTime = clock.getElapsedTime();
-
-      mesh1.rotation.x = elapsedTime * 0.3;
-      mesh1.rotation.y = elapsedTime * 0.4;
-      mesh1.position.y = Math.sin(elapsedTime * 4.5) * 0.35 + 0.5;
-
-      mesh2.rotation.x = elapsedTime * -0.2;
-      mesh2.rotation.y = elapsedTime * 0.5;
-      mesh2.position.y = Math.cos(elapsedTime * 2.0) * 0.3 - 1;
-
-      camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
-      camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
-
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+      lucide.createIcons();
     }
 
-    animate();
+    // 3. CART FUNCTIONS
+    function addToCart(productId) {
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product) return;
 
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      const existing = cart.find(item => item.product.id === productId);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ product, quantity: 1 });
+      }
+
+      updateCartUI();
+      openCart();
+    }
+
+    function updateQuantity(productId, delta) {
+      const item = cart.find(i => i.product.id === productId);
+      if (!item) return;
+
+      item.quantity += delta;
+      if (item.quantity <= 0) {
+        cart = cart.filter(i => i.product.id !== productId);
+      }
+      updateCartUI();
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(i => i.product.id !== productId);
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+      const badge = document.getElementById('cart-count-badge');
+      if (totalCount > 0) {
+        badge.innerText = totalCount;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      const itemsContainer = document.getElementById('cart-items-container');
+      const footer = document.getElementById('cart-footer');
+
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = `
+          <div class="text-center py-12 text-slate-400">
+            <i data-lucide="shopping-bag" class="w-12 h-12 mx-auto mb-3 opacity-30"></i>
+            <p>Tu carrito está vacío</p>
+          </div>
+        `;
+        footer.classList.add('hidden');
+      } else {
+        footer.classList.remove('hidden');
+        itemsContainer.innerHTML = cart.map(item => `
+          <div class="flex gap-4 items-center p-3 rounded-2xl bg-rose-50/50 border border-rose-100">
+            <img src="${item.product.image}" alt="${item.product.name}" class="w-16 h-16 object-cover rounded-xl">
+            <div class="flex-1">
+              <h4 class="text-sm font-bold text-slate-900">${item.product.name}</h4>
+              <span class="text-xs text-rose-600 font-bold">$${item.product.priceUSD.toFixed(2)}</span>
+              <div class="flex items-center gap-2 mt-2">
+                <button onclick="updateQuantity('${item.product.id}', -1)" class="w-6 h-6 rounded-full bg-white border border-rose-200 text-xs font-bold flex items-center justify-center hover:bg-rose-100">-</button>
+                <span class="text-xs font-semibold">${item.quantity}</span>
+                <button onclick="updateQuantity('${item.product.id}', 1)" class="w-6 h-6 rounded-full bg-white border border-rose-200 text-xs font-bold flex items-center justify-center hover:bg-rose-100">+</button>
+              </div>
+            </div>
+            <button onclick="removeFromCart('${item.product.id}')" class="text-slate-400 hover:text-rose-600 p-2">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `).join('');
+
+        const totalUSD = cart.reduce((acc, i) => acc + (i.product.priceUSD * i.quantity), 0);
+        document.getElementById('cart-total-price').innerText = `$${totalUSD.toFixed(2)}`;
+      }
+
+      lucide.createIcons();
+    }
+
+    // 4. WHATSAPP CHECKOUT
+    function checkoutWhatsApp() {
+      if (cart.length === 0) return;
+
+      const totalUSD = cart.reduce((acc, i) => acc + (i.product.priceUSD * i.quantity), 0);
+      let message = `Hola *ZUNA Beauty* ✨, me gustaría completar mi pedido:\n\n`;
+      
+      cart.forEach((item, index) => {
+        message += `${index + 1}. *${item.product.name}* x${item.quantity} - $${(item.product.priceUSD * item.quantity).toFixed(2)}\n`;
+      });
+      
+      message += `\n💰 *Total a pagar:* $${totalUSD.toFixed(2)}\n\n¿Me indican los pasos para finalizar la compra?`;
+
+      const encoded = encodeURIComponent(message);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+    }
+
+    // 5. DRAWER TOGGLE
+    const drawer = document.getElementById('cart-drawer');
+    const backdrop = document.getElementById('cart-backdrop');
+    const content = document.getElementById('cart-content');
+
+    function openCart() {
+      drawer.classList.remove('hidden');
+      setTimeout(() => {
+        backdrop.classList.remove('opacity-0');
+        content.classList.remove('translate-x-full');
+      }, 10);
+    }
+
+    function closeCart() {
+      backdrop.classList.add('opacity-0');
+      content.classList.add('translate-x-full');
+      setTimeout(() => {
+        drawer.classList.add('hidden');
+      }, 300);
+    }
+
+    document.getElementById('open-cart-btn').addEventListener('click', openCart);
+    document.getElementById('close-cart-btn').addEventListener('click', closeCart);
+    backdrop.addEventListener('click', closeCart);
+    document.getElementById('whatsapp-checkout-btn').addEventListener('click', checkoutWhatsApp);
+
+    // 6. CONTROLLED HARMONIOUS GSAP FLOATING
+    function initGsapFloating() {
+      // Imagen Central (Dior Lipstick)
+      gsap.to("#img-diosr", {
+        y: -12,
+        duration: 2.2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+
+      // Imagen Izquierda (Labial Velvet)
+      gsap.to("#img-labial", {
+        y: 10,
+        rotation: -3,
+        duration: 2.8,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 0.2
+      });
+
+      // Imagen Derecha (Brocha)
+      gsap.to("#img-brocha", {
+        y: -14,
+        rotation: 4,
+        duration: 2.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 0.4
+      });
+
+      // Parallax al pasar mouse
+      const container = document.getElementById('hero-floating-container');
+      if (container) {
+        container.addEventListener('mousemove', (e) => {
+          const rect = container.getBoundingClientRect();
+          const relX = (e.clientX - rect.left - rect.width / 2) * 0.03;
+          const relY = (e.clientY - rect.top - rect.height / 2) * 0.03;
+
+          gsap.to("#img-diosr", { x: relX, y: relY, duration: 0.5 });
+          gsap.to("#img-labial", { x: relX * 0.8, y: relY * 0.8, duration: 0.5 });
+          gsap.to("#img-brocha", { x: relX * 1.2, y: relY * 1.2, duration: 0.5 });
+        });
+
+        container.addEventListener('mouseleave', () => {
+          gsap.to("#img-diosr, #img-labial, #img-brocha", { x: 0, y: 0, duration: 0.8 });
+        });
+      }
+    }
+
+    // INITIALIZATION
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+      updateCartUI();
+      initGsapFloating();
+      lucide.createIcons();
     });
   </script>
 </body>
