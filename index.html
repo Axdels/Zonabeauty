@@ -1,537 +1,619 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZUNA Beauty | Maquillaje y Cuidado de la Piel</title>
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- GSAP CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .font-lip {
-      font-family: 'Great Vibes', cursive;
-    }
-    .font-playfair {
-      font-family: 'Playfair Display', serif;
-    }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #fff1f2;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #fda4af;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #f43f5e;
-    }
-    /* GPU Acceleration for GSAP */
-    .gpu-render {
-      will-change: transform;
-      transform: translateZ(0);
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZunaBeauty — Maquillaje & Belleza</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        blush:   '#fff4f6',  /* fondo pastel */
+        card:    '#ffffff',
+        ink:     '#43202f',  /* texto profundo */
+        inksoft: '#7a5563',
+        rose:    '#ef6fa4',
+        rosedark:'#d94f86',
+        pink:    '#f7a8c4',
+        gold:    '#d99a3d',
+        lavender:'#a688e8',
+      },
+      fontFamily: {
+        display: ['"Cormorant Garamond"', 'serif'],
+        sans: ['Jost', 'sans-serif'],
+      },
+      boxShadow: {
+        soft: '0 20px 45px -20px rgba(217,79,134,.28)',
+      },
+    },
+  },
+};
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { background:#fff4f6; color:#43202f; overflow-x:hidden; cursor:none; }
+  @media (hover:none){ body{cursor:auto} .cursor-dot,.cursor-ring{display:none} }
+
+  ::-webkit-scrollbar{width:9px}
+  ::-webkit-scrollbar-track{background:#fff4f6}
+  ::-webkit-scrollbar-thumb{background:#f7a8c4;border-radius:99px}
+  ::-webkit-scrollbar-thumb:hover{background:#ef6fa4}
+  ::selection{background:#f7a8c4;color:#43202f}
+
+  /* cursor */
+  .cursor-dot{position:fixed;top:0;left:0;width:8px;height:8px;border-radius:9999px;background:#ef6fa4;z-index:90;pointer-events:none}
+  .cursor-ring{position:fixed;top:0;left:0;width:38px;height:38px;border-radius:9999px;border:1px solid rgba(239,111,164,.5);z-index:89;pointer-events:none;transition:width .25s,height .25s,border-color .25s}
+  .cursor-ring.grow{width:64px;height:64px;border-color:rgba(217,154,61,.9)}
+
+  /* loader */
+  #loader{position:fixed;inset:0;z-index:100;background:#fff4f6;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.25rem}
+  .loader-bar{width:160px;height:2px;background:#f7d3de;overflow:hidden;border-radius:99px}
+  .loader-bar span{display:block;width:100%;height:100%;background:#ef6fa4;transform-origin:left;transform:scaleX(0)}
+
+  .hero-char{display:inline-block;will-change:transform}
+  .hero-glow{position:absolute;inset:auto 0 -20% 0;height:60%;background:radial-gradient(ellipse at 50% 100%, rgba(247,168,196,.35), transparent 65%);pointer-events:none}
+  .hero-glow2{position:absolute;inset:0 0 auto 0;height:40%;background:radial-gradient(ellipse at 50% 0%, rgba(166,136,232,.18), transparent 65%);pointer-events:none}
+
+  .scroll-line{width:2px;height:64px;margin:0 auto;background:linear-gradient(#ef6fa4,transparent);animation:pulseLine 2s ease-in-out infinite}
+  @keyframes pulseLine{0%,100%{opacity:.3;transform:scaleY(.7)}50%{opacity:1;transform:scaleY(1)}}
+
+  /* estrellas decorativas */
+  .twinkle-star{position:absolute;color:#ef6fa4;pointer-events:none;user-select:none}
+
+  /* marquee */
+  .marquee{overflow:hidden;white-space:nowrap;border-top:1px solid #f7d3de;border-bottom:1px solid #f7d3de;background:#ffeef3}
+  .marquee-track{display:inline-flex;will-change:transform}
+
+  /* tarjetas swatch */
+  .card-art{transition:transform .8s cubic-bezier(.22,1,.36,1)}
+  .swatch{position:relative;overflow:hidden;border-radius:1.25rem}
+  .swatch-label{position:absolute;inset:auto 0 0 0;z-index:2;padding:1.25rem}
+  .swatch .shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:translateX(-130%);transition:transform 1s cubic-bezier(.22,1,.36,1)}
+  .swatch:hover .shine{transform:translateX(130%)}
+
+  .btn-glow{transition:box-shadow .35s, transform .35s, background .35s, color .35s}
+  .btn-glow:hover{box-shadow:0 14px 34px -8px rgba(239,111,164,.55);transform:translateY(-2px)}
+
+  .nav-blur{backdrop-filter:blur(14px);background:rgba(255,244,246,.8);border-bottom:1px solid rgba(247,211,222,.9)}
+
+  .link-underline{position:relative}
+  .link-underline::after{content:'';position:absolute;left:0;bottom:-4px;height:1px;width:100%;background:#ef6fa4;transform:scaleX(0);transform-origin:right;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+  .link-underline:hover::after{transform:scaleX(1);transform-origin:left}
+
+  #bg-canvas{position:fixed;inset:0;z-index:0}
+  main, header, footer{position:relative;z-index:10}
+</style>
 </head>
-<body class="bg-white text-slate-800 antialiased selection:bg-rose-200 selection:text-rose-900">
 
-  <!-- NAVBAR -->
-  <nav class="fixed top-0 left-0 w-full z-40 bg-white/80 backdrop-blur-md border-b border-rose-100 transition-all">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <!-- Brand Logo -->
-      <a href="#" class="flex items-center gap-2 group">
-        <i data-lucide="sparkles" class="w-6 h-6 text-rose-500 animate-pulse"></i>
-        <span class="font-playfair text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
-          ZUNA <span class="font-lip text-rose-600 font-normal">Beauty</span>
-        </span>
-      </a>
+<body class="font-sans antialiased">
 
-      <!-- Navigation Links -->
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
-        <a href="#inicio" class="hover:text-rose-600 transition-colors">Inicio</a>
-        <a href="#catalogo" class="hover:text-rose-600 transition-colors">Colección</a>
-        <a href="#nosotros" class="hover:text-rose-600 transition-colors">Experiencia ZUNA</a>
-      </div>
+<!-- THREE.JS — cielo de estrellas pastel -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-      <!-- Cart Button -->
-      <button id="open-cart-btn" class="relative flex items-center gap-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white px-5 py-2.5 rounded-full font-semibold transition-all duration-300 border border-rose-200 shadow-sm hover:shadow-md">
-        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-        <span class="hidden sm:inline">Carrito</span>
-        <span id="cart-count-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce">0</span>
-      </button>
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <p class="font-display italic text-3xl text-rosedark tracking-wide">ZunaBeauty ✦</p>
+  <div class="loader-bar"><span id="loaderFill"></span></div>
+</div>
+
+<!-- NAV -->
+<header id="nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-500">
+  <nav class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a href="#top" class="font-display text-2xl tracking-wide text-ink">Zuna<span class="text-rose italic">Beauty</span> <span class="text-rose text-base align-super">✦</span></a>
+    <div class="hidden md:flex items-center gap-8 text-sm uppercase tracking-[0.18em] text-inksoft">
+      <a href="#top" class="link-underline" data-hover>Inicio</a>
+      <a href="#nosotras" class="link-underline" data-hover>Nosotras</a>
+      <a href="#catalogo" class="link-underline" data-hover>Catálogo</a>
+      <a href="#servicios" class="link-underline" data-hover>Servicios</a>
+      <a href="#contacto" class="link-underline" data-hover>Contacto</a>
+      <a href="#contacto" data-hover class="btn-glow bg-rose text-white px-5 py-2 rounded-full">Reservar</a>
     </div>
+    <a href="#contacto" class="md:hidden btn-glow bg-rose text-white px-4 py-1.5 rounded-full text-sm" data-hover>Reservar</a>
   </nav>
+</header>
 
-  <!-- HERO SECTION WITH COMPACT FLOATING BODEGON -->
-  <section id="inicio" class="pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-b from-rose-50/50 via-white to-pink-50/30 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
-      
-      <!-- Text Content -->
-      <div class="space-y-6 text-center md:text-left z-10">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-100/80 text-rose-700 text-xs font-semibold tracking-wider uppercase">
-          <i data-lucide="sparkles" class="w-4 h-4 text-rose-500"></i> Nueva Colección Velvet Red
-        </div>
-        <h1 class="font-playfair text-4xl sm:text-6xl font-bold text-slate-900 leading-tight">
-          Resalta tu Belleza <br />
-          <span class="font-lip text-rose-600 text-5xl sm:text-7xl font-normal block mt-2">
-            con elegancia y actitud
-          </span>
-        </h1>
-        <p class="text-slate-600 text-base sm:text-lg max-w-lg mx-auto md:mx-0 font-light">
-          Formulaciones exclusivas, tonos pastel radiantes y pigmentos intensos. Diseñados para potenciar tu esencia natural día a día.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
-          <a href="#catalogo" class="inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-rose-300 transition-all transform hover:-translate-y-0.5">
-            Explorar Productos <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-          </a>
-        </div>
-      </div>
+<main id="top">
 
-      <!-- Compact & Proportional Floating Composition -->
-      <div id="hero-floating-container" class="relative w-full h-[320px] sm:h-[420px] flex items-center justify-center select-none">
-        <!-- Glow Circle Behind -->
-        <div class="absolute w-64 h-64 sm:w-80 sm:h-80 bg-gradient-to-tr from-rose-300/40 via-pink-200/30 to-rose-100/20 rounded-full filter blur-2xl -z-10"></div>
-        
-        <div class="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center">
-          <!-- Image 1: Labial Velvet (Detrás - Izquierda) -->
-          <img 
-            id="img-labial" 
-            src="https://i.ibb.co/jk39L5tJ/labial.png" 
-            alt="Labial Velvet ZUNA" 
-            class="gpu-render absolute z-10 w-28 sm:w-36 -translate-x-16 -translate-y-4 drop-shadow-xl object-contain pointer-events-none"
-          />
+  <!-- HERO -->
+  <section class="min-h-screen flex flex-col items-center justify-center relative px-6 text-center">
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <span class="twinkle-star text-3xl" style="top:18%;left:12%">✦</span>
+    <span class="twinkle-star text-xl text-lavender" style="top:28%;right:14%">✦</span>
+    <span class="twinkle-star text-2xl text-gold" style="bottom:24%;left:20%">✦</span>
+    <span class="twinkle-star text-lg text-lavender" style="bottom:32%;right:22%">✦</span>
 
-          <!-- Image 2: Diosr Lipstick (Principal - Centro) -->
-          <img 
-            id="img-diosr" 
-            src="https://i.ibb.co/sJQJTPxB/diosrlipstick.png" 
-            alt="Dior Lipstick ZUNA" 
-            class="gpu-render absolute z-20 w-32 sm:w-44 translate-x-2 translate-y-2 drop-shadow-2xl object-contain pointer-events-none"
-          />
-
-          <!-- Image 3: Brocha de Maquillaje (Derecha - Abajo) -->
-          <img 
-            id="img-brocha" 
-            src="https://i.ibb.co/Xk6bSD71/brocha.png" 
-            alt="Brocha Profesional ZUNA" 
-            class="gpu-render absolute z-30 w-28 sm:w-36 translate-x-16 translate-y-12 drop-shadow-lg object-contain pointer-events-none"
-          />
-        </div>
-      </div>
-
+    <p class="hero-sub uppercase tracking-[0.5em] text-gold text-xs md:text-sm mb-6 opacity-0">✦ Maquillaje · Belleza · Arte ✦</p>
+    <h1 id="heroTitle" class="font-display text-ink leading-none text-[17vw] md:text-[9rem]">ZunaBeauty</h1>
+    <p class="hero-sub max-w-xl mt-6 text-inksoft font-light text-lg md:text-xl opacity-0">
+      Glows que hablan antes que tú. Novias, editorial y glam de cada día —
+      creados para que te sientas inconfundiblemente tú. ✦
+    </p>
+    <div class="hero-sub mt-10 flex flex-wrap items-center justify-center gap-4 opacity-0">
+      <a href="#contacto" data-hover class="btn-glow bg-rose text-white px-8 py-3 rounded-full uppercase tracking-widest text-sm font-medium">Reservar Cita</a>
+      <a href="#catalogo" data-hover class="btn-glow border border-rose/50 text-rosedark px-8 py-3 rounded-full uppercase tracking-widest text-sm hover:bg-rose hover:text-white">Ver Catálogo</a>
+    </div>
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+      <span class="text-[10px] uppercase tracking-[0.4em] text-inksoft/70">Desliza</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- CATALOG SECTION -->
-  <section id="catalogo" class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <h2 class="font-playfair text-3xl sm:text-5xl font-bold text-slate-900 mb-4">
-          Nuestros <span class="font-lip text-rose-600 text-4xl sm:text-6xl">Favoritos</span>
-        </h2>
-        <p class="text-slate-600">
-          Descubre nuestra línea exclusiva de maquillajes y cuidado facial formulados para lucir un acabado radiante.
-        </p>
-      </div>
-
-      <!-- Products Grid -->
-      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Dynaimcally inserted by JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT SECTION -->
-  <section id="nosotros" class="py-20 bg-rose-50/40 border-y border-rose-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
-      <div class="relative rounded-3xl overflow-hidden shadow-xl">
-        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=800" alt="ZUNA Beauty Concept" class="w-full h-auto object-cover">
-      </div>
-      <div class="space-y-6">
-        <span class="text-rose-600 font-semibold tracking-wider text-sm uppercase">Experiencia ZUNA</span>
-        <h2 class="font-playfair text-3xl sm:text-4xl font-bold text-slate-900">
-          Belleza consciente creada para empoderar tu rostro
-        </h2>
-        <p class="text-slate-600 leading-relaxed">
-          En ZUNA Beauty combinamos ingredientes de primera calidad con tonos pensados para adaptarse a cada piel. Todos nuestros productos son 100% libres de crueldad animal y probados dermatológicamente.
-        </p>
-        <div class="grid grid-cols-2 gap-4 pt-4">
-          <div class="p-4 bg-white rounded-2xl border border-rose-100 shadow-sm">
-            <i data-lucide="heart" class="w-6 h-6 text-rose-500 mb-2"></i>
-            <h4 class="font-bold text-slate-900">Cruelty Free</h4>
-            <p class="text-xs text-slate-500">Nunca probado en animales</p>
-          </div>
-          <div class="p-4 bg-white rounded-2xl border border-rose-100 shadow-sm">
-            <i data-lucide="sparkles" class="w-6 h-6 text-rose-500 mb-2"></i>
-            <h4 class="font-bold text-slate-900">Fórmula Premium</h4>
-            <p class="text-xs text-slate-500">Ingredientes de alta calidad</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="bg-slate-900 text-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-      <a href="#" class="inline-flex items-center gap-2">
-        <i data-lucide="sparkles" class="w-6 h-6 text-rose-400"></i>
-        <span class="font-playfair text-2xl font-bold text-white">
-          ZUNA <span class="font-lip text-rose-400 font-normal">Beauty</span>
-        </span>
-      </a>
-      <p class="text-slate-400 text-sm max-w-md mx-auto">
-        Maquillaje chic y cosmética formulada para realzar lo mejor de ti.
-      </p>
-      <p class="text-slate-500 text-xs">
-        &copy; 2026 ZUNA Beauty C.A. Todos los derechos reservados.
-      </p>
-    </div>
-  </footer>
-
-  <!-- CART DRAWER / MODAL -->
-  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
-    <!-- Backdrop -->
-    <div id="cart-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity opacity-0"></div>
-
-    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
-      <div id="cart-content" class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300">
-        
-        <!-- Header -->
-        <div class="p-6 border-b border-rose-100 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <i data-lucide="shopping-bag" class="w-6 h-6 text-rose-600"></i>
-            <h2 class="font-playfair text-xl font-bold text-slate-900">Tu Carrito ZUNA</h2>
-          </div>
-          <button id="close-cart-btn" class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <!-- Items List -->
-        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
-          <!-- Items inserted dynamically -->
-        </div>
-
-        <!-- Footer Checkout -->
-        <div id="cart-footer" class="p-6 border-t border-rose-100 bg-rose-50/30 space-y-4">
-          <div class="flex items-center justify-between font-bold text-lg text-slate-900">
-            <span>Total Estimado:</span>
-            <span id="cart-total-price" class="text-rose-600">$0.00</span>
-          </div>
-          <button id="whatsapp-checkout-btn" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-full font-bold shadow-lg transition-all hover:shadow-emerald-200">
-            <i data-lucide="send" class="w-5 h-5"></i> Terminar pedido en WhatsApp
-          </button>
-        </div>
-
-      </div>
+  <!-- MARQUEE -->
+  <div class="marquee py-4 mt-6">
+    <div class="marquee-track font-display italic text-2xl md:text-3xl text-rosedark/80">
+      <span class="px-8">Piel Radiante ✦ Novias ✦ Editorial ✦ Glam Suave ✦ Brillo de Estrella ✦ Fiestas ✦</span>
+      <span class="px-8" aria-hidden="true">Piel Radiante ✦ Novias ✦ Editorial ✦ Glam Suave ✦ Brillo de Estrella ✦ Fiestas ✦</span>
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIC -->
-  <script>
-    // 1. DATA & STATE MANAGEMENT
-    const WHATSAPP_NUMBER = "584121234567";
+  <!-- NOSOTRAS -->
+  <section id="nosotras" class="max-w-6xl mx-auto px-6 py-28 md:py-36 grid md:grid-cols-2 gap-14 items-center">
+    <div data-reveal>
+      <p class="uppercase tracking-[0.4em] text-gold text-xs mb-5">Nosotras</p>
+      <h2 class="font-display text-5xl md:text-6xl text-ink leading-tight">La belleza es la <em class="text-rose">confianza</em> que llevas puesta.</h2>
+      <p class="mt-8 text-inksoft font-light leading-relaxed">
+        ZunaBeauty es donde el maquillaje con base en piel se encuentra con el puro arte.
+        Desde las mañanas de boda hasta las sesiones editoriales, cada look se construye
+        alrededor de una sola cosa: cómo quieres sentirte frente al espejo —
+        radiante, pulida y totalmente sin disculpas. ✦
+      </p>
+      <p class="mt-4 text-inksoft font-light leading-relaxed">
+        Técnica limpia, acabados a prueba de cámara y una paleta que se mueve con tu luz.
+      </p>
+    </div>
+    <div class="grid grid-cols-3 gap-6" data-reveal>
+      <div class="text-center border border-pink/40 rounded-2xl py-8 bg-white/70 shadow-soft">
+        <p class="font-display text-5xl text-rose counter" data-count="150">0</p>
+        <p class="mt-2 text-xs uppercase tracking-[0.25em] text-inksoft">Novias</p>
+      </div>
+      <div class="text-center border border-pink/40 rounded-2xl py-8 bg-white/70 shadow-soft">
+        <p class="font-display text-5xl text-rose counter" data-count="500">0</p>
+        <p class="mt-2 text-xs uppercase tracking-[0.25em] text-inksoft">Looks Creados</p>
+      </div>
+      <div class="text-center border border-pink/40 rounded-2xl py-8 bg-white/70 shadow-soft">
+        <p class="font-display text-5xl text-rose counter" data-count="100">0</p>
+        <p class="mt-2 text-xs uppercase tracking-[0.25em] text-inksoft">Rostros Radiantes</p>
+      </div>
+    </div>
+  </section>
 
-    const PRODUCTS = [
-      {
-        id: '1',
-        name: 'Velvet Matte Lipstick #04 Velvet Red',
-        category: 'Labiales',
-        priceUSD: 16.50,
-        rating: 4.9,
-        reviewsCount: 142,
-        image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=600',
-        description: 'Labial mate de alta pigmentación en tono rojo velvet con textura suave y acabado aterciopelado.'
-      },
-      {
-        id: '2',
-        name: 'Glow Botanical Hydrating Serum',
-        category: 'Cuidado Facial',
-        priceUSD: 22.00,
-        rating: 4.8,
-        reviewsCount: 98,
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=600',
-        description: 'Sérum hidratante con ácido hialurónico y extractos florales para una piel luminosa.'
-      },
-      {
-        id: '3',
-        name: 'Rose Powder Blush & Highlight',
-        category: 'Rostro',
-        priceUSD: 18.00,
-        rating: 5.0,
-        reviewsCount: 215,
-        image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=600',
-        description: 'Rubor compacto en tono rosa pastel con destellos sutiles para resaltar tus pómulos.'
-      },
-      {
-        id: '4',
-        name: 'Silk Touch Foundation SPF 30',
-        category: 'Rostro',
-        priceUSD: 24.50,
-        rating: 4.7,
-        reviewsCount: 86,
-        image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600',
-        description: 'Base de maquillaje de cobertura media adaptable con protección solar.'
-      },
-      {
-        id: '5',
-        name: 'Lash Miracle Volumizing Mascara',
-        category: 'Ojos',
-        priceUSD: 14.00,
-        rating: 4.9,
-        reviewsCount: 170,
-        image: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?auto=format&fit=crop&q=80&w=600',
-        description: 'Máscara de pestañas resistente al agua que otorga volumen extremo sin grumos.'
-      },
-      {
-        id: '6',
-        name: 'Crystal Gloss Lip Oil',
-        category: 'Labiales',
-        priceUSD: 12.50,
-        rating: 4.8,
-        reviewsCount: 110,
-        image: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&q=80&w=600',
-        description: 'Aceite de labios nutritivo e hidratante con acabado brillante y no pegajoso.'
-      }
-    ];
-
-    let cart = [];
-
-    // 2. RENDER PRODUCTS
-    function renderProducts() {
-      const grid = document.getElementById('products-grid');
-      grid.innerHTML = PRODUCTS.map(prod => `
-        <div class="group bg-rose-50/30 rounded-3xl overflow-hidden border border-rose-100 hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
-          <div class="relative overflow-hidden aspect-square bg-slate-100">
-            <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            <span class="absolute top-4 left-4 bg-rose-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
-              ${prod.category}
-            </span>
-          </div>
-
-          <div class="p-6 flex-1 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center gap-1 text-amber-500 mb-2">
-                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                <span class="text-xs font-bold text-slate-700">${prod.rating}</span>
-                <span class="text-xs text-slate-400">(${prod.reviewsCount})</span>
-              </div>
-              <h3 class="font-playfair font-bold text-lg text-slate-900 mb-2">${prod.name}</h3>
-              <p class="text-slate-600 text-sm mb-4 line-clamp-2">${prod.description}</p>
-            </div>
-
-            <div class="flex items-center justify-between pt-4 border-t border-rose-100">
-              <div>
-                <span class="text-xs text-slate-400 block">Precio</span>
-                <span class="font-bold text-slate-900 text-xl">$${prod.priceUSD.toFixed(2)}</span>
-              </div>
-              <button onclick="addToCart('${prod.id}')" class="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold transition-all shadow-md active:scale-95">
-                <i data-lucide="plus" class="w-4 h-4"></i> Agregar
-              </button>
-            </div>
-          </div>
+  <!-- CATÁLOGO -->
+  <section id="catalogo" class="max-w-6xl mx-auto px-6 py-24 md:py-32">
+    <div class="text-center mb-16" data-reveal>
+      <p class="uppercase tracking-[0.4em] text-gold text-xs mb-5">Nuestra Tienda</p>
+      <h2 class="font-display text-5xl md:text-6xl text-ink">Catálogo de <em class="text-rose">Productos</em></h2>
+      <p class="mt-4 text-inksoft font-light">Pequeños lujos pastel, hechos para brillar. ✦</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Producto 1 -->
+      <div data-reveal data-hover class="group bg-white rounded-3xl border border-pink/40 shadow-soft overflow-hidden">
+        <div class="swatch aspect-square">
+          <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#ffe0ea,#f48fb1)"></div><div class="shine"></div>
+          <span class="absolute top-4 left-4 z-10 bg-white/90 text-rosedark text-[10px] uppercase tracking-[0.25em] px-3 py-1 rounded-full">✦ Nuevo</span>
         </div>
-      `).join('');
-
-      lucide.createIcons();
-    }
-
-    // 3. CART FUNCTIONS
-    function addToCart(productId) {
-      const product = PRODUCTS.find(p => p.id === productId);
-      if (!product) return;
-
-      const existing = cart.find(item => item.product.id === productId);
-      if (existing) {
-        existing.quantity += 1;
-      } else {
-        cart.push({ product, quantity: 1 });
-      }
-
-      updateCartUI();
-      openCart();
-    }
-
-    function updateQuantity(productId, delta) {
-      const item = cart.find(i => i.product.id === productId);
-      if (!item) return;
-
-      item.quantity += delta;
-      if (item.quantity <= 0) {
-        cart = cart.filter(i => i.product.id !== productId);
-      }
-      updateCartUI();
-    }
-
-    function removeFromCart(productId) {
-      cart = cart.filter(i => i.product.id !== productId);
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
-      const badge = document.getElementById('cart-count-badge');
-      if (totalCount > 0) {
-        badge.innerText = totalCount;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-
-      const itemsContainer = document.getElementById('cart-items-container');
-      const footer = document.getElementById('cart-footer');
-
-      if (cart.length === 0) {
-        itemsContainer.innerHTML = `
-          <div class="text-center py-12 text-slate-400">
-            <i data-lucide="shopping-bag" class="w-12 h-12 mx-auto mb-3 opacity-30"></i>
-            <p>Tu carrito está vacío</p>
+        <div class="p-6">
+          <div class="flex items-baseline justify-between gap-3">
+            <h3 class="font-display text-2xl text-ink">Paleta Petal Glow</h3>
+            <p class="font-medium text-rosedark">$24</p>
           </div>
-        `;
-        footer.classList.add('hidden');
-      } else {
-        footer.classList.remove('hidden');
-        itemsContainer.innerHTML = cart.map(item => `
-          <div class="flex gap-4 items-center p-3 rounded-2xl bg-rose-50/50 border border-rose-100">
-            <img src="${item.product.image}" alt="${item.product.name}" class="w-16 h-16 object-cover rounded-xl">
-            <div class="flex-1">
-              <h4 class="text-sm font-bold text-slate-900">${item.product.name}</h4>
-              <span class="text-xs text-rose-600 font-bold">$${item.product.priceUSD.toFixed(2)}</span>
-              <div class="flex items-center gap-2 mt-2">
-                <button onclick="updateQuantity('${item.product.id}', -1)" class="w-6 h-6 rounded-full bg-white border border-rose-200 text-xs font-bold flex items-center justify-center hover:bg-rose-100">-</button>
-                <span class="text-xs font-semibold">${item.quantity}</span>
-                <button onclick="updateQuantity('${item.product.id}', 1)" class="w-6 h-6 rounded-full bg-white border border-rose-200 text-xs font-bold flex items-center justify-center hover:bg-rose-100">+</button>
-              </div>
-            </div>
-            <button onclick="removeFromCart('${item.product.id}')" class="text-slate-400 hover:text-rose-600 p-2">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
+          <p class="mt-1 text-sm font-light text-inksoft">12 sombras mate &amp; shimmer en tonos pastel</p>
+          <button data-hover class="mt-5 w-full btn-glow bg-rose text-white py-2.5 rounded-full uppercase tracking-widest text-xs font-medium">Añadir ✦</button>
+        </div>
+      </div>
+      <!-- Producto 2 -->
+      <div data-reveal data-hover class="group bg-white rounded-3xl border border-pink/40 shadow-soft overflow-hidden">
+        <div class="swatch aspect-square">
+          <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#ffe9dc,#e8a37b)"></div><div class="shine"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-baseline justify-between gap-3">
+            <h3 class="font-display text-2xl text-ink">Brochas Dusty Rose</h3>
+            <p class="font-medium text-rosedark">$32</p>
           </div>
-        `).join('');
+          <p class="mt-1 text-sm font-light text-inksoft">Set de 10 brochas premium con estuche de viaje</p>
+          <button data-hover class="mt-5 w-full btn-glow bg-rose text-white py-2.5 rounded-full uppercase tracking-widest text-xs font-medium">Añadir ✦</button>
+        </div>
+      </div>
+      <!-- Producto 3 -->
+      <div data-reveal data-hover class="group bg-white rounded-3xl border border-pink/40 shadow-soft overflow-hidden">
+        <div class="swatch aspect-square">
+          <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#ffd6dd,#f27ba0)"></div><div class="shine"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-baseline justify-between gap-3">
+            <h3 class="font-display text-2xl text-ink">Rubor Boca de Rosa</h3>
+            <p class="font-medium text-rosedark">$14</p>
+          </div>
+          <p class="mt-1 text-sm font-light text-inksoft">Crema-rosa con acabado luminoso de larga duración</p>
+          <button data-hover class="mt-5 w-full btn-glow bg-rose text-white py-2.5 rounded-full uppercase tracking-widest text-xs font-medium">Añadir ✦</button>
+        </div>
+      </div>
+      <!-- Producto 4 -->
+      <div data-reveal data-hover class="group bg-white rounded-3xl border border-pink/40 shadow-soft overflow-hidden">
+        <div class="swatch aspect-square">
+          <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#fff3e8,#eec39a)"></div><div class="shine"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-baseline justify-between gap-3">
+            <h3 class="font-display text-2xl text-ink">Base Nude Muse</h3>
+            <p class="font-medium text-rosedark">$28</p>
+          </div>
+          <p class="mt-1 text-sm font-light text-inksoft">Cobertura media, finish glow · 12 tonos cálidos</p>
+          <button data-hover class="mt-5 w-full btn-glow bg-rose text-white py-2.5 rounded-full uppercase tracking-widest text-xs font-medium">Añadir ✦</button>
+        </div>
+      </div>
+      <!-- Producto 5 -->
+      <div data-reveal data-hover class="group bg-white rounded-3xl border border-pink/40 shadow-soft overflow-hidden">
+        <div class="swatch aspect-square">
+          <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#ffd0d8,#e0567e)"></div><div class="shine"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-baseline justify-between gap-3">
+            <h3 class="font-display text-2xl text-ink">Gloss Scarlet Kiss</h3>
+            <p class="font-medium text-rosedark">$12</p>
+          </div>
+          <p class="mt-1 text-sm font-light text-inksoft">Bálsamo labial rojo-frambuesa, sin sensación pegajosa</p>
+          <button data-hover class="mt-5 w-full btn-glow bg-rose text-white py-2.5 rounded-full uppercase tracking-widest text-xs font-medium">Añadir ✦</button>
+        </div>
+      </div>
+      <!-- Producto 6 -->
+      <div data-reveal data-hover class="group bg-white rounded-3xl border border-pink/40 shadow-soft overflow-hidden">
+        <div class="swatch aspect-square">
+          <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#f3eaff,#b9a0f0)"></div><div class="shine"></div>
+          <span class="absolute top-4 left-4 z-10 bg-white/90 text-rosedark text-[10px] uppercase tracking-[0.25em] px-3 py-1 rounded-full">✦ Top</span>
+        </div>
+        <div class="p-6">
+          <div class="flex items-baseline justify-between gap-3">
+            <h3 class="font-display text-2xl text-ink">Máscara Star Lash</h3>
+            <p class="faint font-medium text-rosedark">$16</p>
+          </div>
+          <p class="mt-1 text-sm font-light text-inksoft">Volumen + lift con cepillo de estrella, a prueba de lagrimones</p>
+          <button data-hover class="mt-5 w-full btn-glow bg-rose text-white py-2.5 rounded-full uppercase tracking-widest text-xs font-medium">Añadir ✦</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        const totalUSD = cart.reduce((acc, i) => acc + (i.product.priceUSD * i.quantity), 0);
-        document.getElementById('cart-total-price').innerText = `$${totalUSD.toFixed(2)}`;
-      }
+  <!-- SERVICIOS -->
+  <section id="servicios" class="max-w-6xl mx-auto px-6 py-24 md:py-32">
+    <div class="text-center mb-16" data-reveal>
+      <p class="uppercase tracking-[0.4em] text-gold text-xs mb-5">Servicios</p>
+      <h2 class="font-display text-5xl md:text-6xl text-ink">El <em class="text-rose">Menú</em> de Glam</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div data-reveal data-hover class="group bg-white border border-pink/40 rounded-2xl p-8 shadow-soft hover:border-rose/70 transition-colors duration-500">
+        <div class="text-4xl mb-6 card-art">💍</div>
+        <h3 class="font-display text-2xl text-ink">Glam de Novias</h3>
+        <p class="mt-3 text-sm font-light text-inksoft leading-relaxed">Tu día, impecable desde la primera luz. Prueba + día de boda con acabado fresco y a prueba de cámara.</p>
+      </div>
+      <div data-reveal data-hover class="group bg-white border border-pink/40 rounded-2xl p-8 shadow-soft hover:border-rose/70 transition-colors duration-500">
+        <div class="text-4xl mb-6 card-art">📸</div>
+        <h3 class="font-display text-2xl text-ink">Editorial</h3>
+        <p class="mt-3 text-sm font-light text-inksoft leading-relaxed">Conceptos atrevidos hechos para el lente — textura, color y drama en el equilibrio perfecto.</p>
+      </div>
+      <div data-reveal data-hover class="group bg-white border border-pink/40 rounded-2xl p-8 shadow-soft hover:border-rose/70 transition-colors duration-500">
+        <div class="text-4xl mb-6 card-art">🥂</div>
+        <h3 class="font-display text-2xl text-ink">Eventos &amp; Fiestas</h3>
+        <p class="mt-3 text-sm font-light text-inksoft leading-relaxed">Brillo que dura toda la noche. Energía de alfombra roja para galas y celebraciones.</p>
+      </div>
+      <div data-reveal data-hover class="group bg-white border border-pink/40 rounded-2xl p-8 shadow-soft hover:border-rose/70 transition-colors duration-500">
+        <div class="text-4xl mb-6 card-art">✨</div>
+        <h3 class="font-display text-2xl text-ink">Glam Suave &amp; Tips</h3>
+        <p class="mt-3 text-sm font-light text-inksoft leading-relaxed">Belleza diaria bien hecha — más tips piel-first para mantener tu glow entre sesiones.</p>
+      </div>
+    </div>
+  </section>
 
-      lucide.createIcons();
-    }
+  <!-- LOOKS -->
+  <section id="looks" class="max-w-6xl mx-auto px-6 py-24 md:py-32">
+    <div class="text-center mb-16" data-reveal>
+      <p class="uppercase tracking-[0.4em] text-gold text-xs mb-5">Looks de Firma</p>
+      <h2 class="font-display text-5xl md:text-6xl text-ink">La <em class="text-rose">Paleta</em></h2>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-5">
+      <div data-reveal data-hover class="swatch aspect-[3/4]">
+        <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#ffe0ea,#f2a5bd)"></div><div class="shine"></div>
+        <div class="swatch-label"><p class="font-display text-2xl text-ink">Glow de Pétalo</p><p class="text-xs uppercase tracking-[0.25em] text-inksoft">Glam Suave</p></div>
+      </div>
+      <div data-reveal data-hover class="swatch aspect-[3/4]">
+        <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#fff1dd,#e9b979)"></div><div class="shine"></div>
+        <div class="swatch-label"><p class="font-display text-2xl text-ink">Hora Dorada</p><p class="text-xs uppercase tracking-[0.25em] text-inksoft">Novias</p></div>
+      </div>
+      <div data-reveal data-hover class="swatch aspect-[3/4]">
+        <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#f3c4d8,#9c4f76)"></div><div class="shine"></div>
+        <div class="swatch-label"><p class="font-display text-2xl text-white">Vino de Noche</p><p class="text-xs uppercase tracking-[0.25em] text-white/70">Eventos</p></div>
+      </div>
+      <div data-reveal data-hover class="swatch aspect-[3/4]">
+        <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#fff3e8,#e8b98a)"></div><div class="shine"></div>
+        <div class="swatch-label"><p class="font-display text-2xl text-ink">Muse Nude</p><p class="text-xs uppercase tracking-[0.25em] text-inksoft">Piel-First</p></div>
+      </div>
+      <div data-reveal data-hover class="swatch aspect-[3/4]">
+        <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#ffd6de,#d64f7c)"></div><div class="shine"></div>
+        <div class="swatch-label"><p class="font-display text-2xl text-white">Escarlata Editorial</p><p class="text-xs uppercase tracking-[0.25em] text-white/70">Editorial</p></div>
+      </div>
+      <div data-reveal data-hover class="swatch aspect-[3/4]">
+        <div class="card-art absolute inset-0" style="background:linear-gradient(160deg,#ffe4ec,#e5b567)"></div><div class="shine"></div>
+        <div class="swatch-label"><p class="font-display text-2xl text-ink">Rosa &amp; Oro</p><p class="text-xs uppercase tracking-[0.25em] text-inksoft">Firma</p></div>
+      </div>
+    </div>
+  </section>
 
-    // 4. WHATSAPP CHECKOUT
-    function checkoutWhatsApp() {
-      if (cart.length === 0) return;
+  <!-- QUOTE -->
+  <section class="max-w-4xl mx-auto px-6 py-24 text-center" data-reveal>
+    <p class="text-5xl text-rose">“</p>
+    <p class="font-display italic text-3xl md:text-5xl text-ink leading-snug">
+      No solo me hizo el maquillaje — me hizo sentir que era la protagonista de mi propia historia.
+    </p>
+    <p class="mt-8 text-xs uppercase tracking-[0.4em] text-rosedark">— Una Novia de ZunaBeauty ✦</p>
+  </section>
 
-      const totalUSD = cart.reduce((acc, i) => acc + (i.product.priceUSD * i.quantity), 0);
-      let message = `Hola *ZUNA Beauty* ✨, me gustaría completar mi pedido:\n\n`;
-      
-      cart.forEach((item, index) => {
-        message += `${index + 1}. *${item.product.name}* x${item.quantity} - $${(item.product.priceUSD * item.quantity).toFixed(2)}\n`;
-      });
-      
-      message += `\n💰 *Total a pagar:* $${totalUSD.toFixed(2)}\n\n¿Me indican los pasos para finalizar la compra?`;
+  <!-- CONTACTO -->
+  <section id="contacto" class="relative py-28 md:py-36 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 50% 120%, rgba(247,168,196,.35), transparent 60%)"></div>
+    <span class="twinkle-star text-2xl" style="top:15%;left:15%">✦</span>
+    <span class="twinkle-star text-lg text-lavender" style="top:25%;right:18%">✦</span>
+    <span class="twinkle-star text-3xl text-gold" style="bottom:20%;left:25%">✦</span>
+    <div class="max-w-3xl mx-auto px-6 text-center" data-reveal>
+      <p class="uppercase tracking-[0.4em] text-gold text-xs mb-5">Agenda Abierta</p>
+      <h2 class="font-display text-5xl md:text-7xl text-ink">Contáctanos — <em class="text-rose">creemos tu glow</em>.</h2>
+      <p class="mt-6 text-inksoft font-light text-lg">Escríbenos para fechas, precios y pruebas — o mándanos un mensaje directo.</p>
+      <div class="mt-10 flex items-center justify-center gap-4 flex-wrap">
+        <a href="#" data-hover class="btn-glow bg-rose text-white px-8 py-3 rounded-full uppercase tracking-widest text-sm font-medium">WhatsApp</a>
+        <a href="mailto:hola@zunabeauty.com" data-hover class="btn-glow border border-rose/50 text-rosedark px-8 py-3 rounded-full uppercase tracking-widest text-sm hover:bg-rose hover:text-white">Escríbenos</a>
+      </div>
+      <div class="mt-14 flex items-center justify-center gap-10 text-sm uppercase tracking-[0.3em] text-inksoft">
+        <a href="#" data-hover class="link-underline hover:text-rosedark">Instagram</a>
+        <a href="#" data-hover class="link-underline hover:text-rosedark">TikTok</a>
+        <a href="#" data-hover class="link-underline hover:text-rosedark">YouTube</a>
+      </div>
+    </div>
+  </section>
+</main>
 
-      const encoded = encodeURIComponent(message);
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
-    }
+<!-- FOOTER -->
+<footer class="border-t border-pink/40 py-10">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-inksoft">
+    <p class="font-display text-lg text-ink">Zuna<span class="text-rose italic">Beauty</span> <span class="text-rose">✦</span></p>
+    <p>© <span id="year"></span> ZunaBeauty — Hecho con brillos y código.</p>
+    <p class="text-xs uppercase tracking-[0.3em]">Maquillaje · Belleza · Arte</p>
+  </div>
+</footer>
 
-    // 5. DRAWER TOGGLE
-    const drawer = document.getElementById('cart-drawer');
-    const backdrop = document.getElementById('cart-backdrop');
-    const content = document.getElementById('cart-content');
+<!-- LIBS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-    function openCart() {
-      drawer.classList.remove('hidden');
-      setTimeout(() => {
-        backdrop.classList.remove('opacity-0');
-        content.classList.remove('translate-x-full');
-      }, 10);
-    }
+<script>
+/* ================= THREE.JS — cielo de estrellas pastel que titilan ================= */
+(function () {
+  const canvas = document.getElementById('bg-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
-    function closeCart() {
-      backdrop.classList.add('opacity-0');
-      content.classList.add('translate-x-full');
-      setTimeout(() => {
-        drawer.classList.add('hidden');
-      }, 300);
-    }
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 0, 30);
 
-    document.getElementById('open-cart-btn').addEventListener('click', openCart);
-    document.getElementById('close-cart-btn').addEventListener('click', closeCart);
-    backdrop.addEventListener('click', closeCart);
-    document.getElementById('whatsapp-checkout-btn').addEventListener('click', checkoutWhatsApp);
+  // textura: destello de 4 puntas (estrella suave)
+  const sprite = document.createElement('canvas');
+  sprite.width = sprite.height = 64;
+  const ctx = sprite.getContext('2d');
+  ctx.translate(32, 32);
+  const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, 30);
+  glow.addColorStop(0, 'rgba(255,255,255,0.85)');
+  glow.addColorStop(0.4, 'rgba(255,255,255,0.18)');
+  glow.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.beginPath();
+  ctx.moveTo(0, -30); ctx.quadraticCurveTo(4, -4, 30, 0);
+  ctx.quadraticCurveTo(4, 4, 0, 30);
+  ctx.quadraticCurveTo(-4, 4, -30, 0);
+  ctx.quadraticCurveTo(-4, -4, 0, -30);
+  ctx.closePath(); ctx.fill();
+  const tex = new THREE.CanvasTexture(sprite);
 
-    // 6. CONTROLLED HARMONIOUS GSAP FLOATING
-    function initGsapFloating() {
-      // Imagen Central (Dior Lipstick)
-      gsap.to("#img-diosr", {
-        y: -12,
-        duration: 2.2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
+  const COUNT = 380;
+  const positions = new Float32Array(COUNT * 3);
+  const colors = new Float32Array(COUNT * 3);
+  const phases = new Float32Array(COUNT);
+  const sizes = new Float32Array(COUNT);
+  const palette = [
+    new THREE.Color('#ef6fa4'), // rosa
+    new THREE.Color('#a688e8'), // lavanda
+    new THREE.Color('#d99a3d'), // dorado
+    new THREE.Color('#f7a8c4'), // rosa claro
+    new THREE.Color('#d94f86'), // rosa profundo
+  ];
+  for (let i = 0; i < COUNT; i++) {
+    positions[i * 3]     = (Math.random() - 0.5) * 90;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 55;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 45;
+    const c = palette[Math.floor(Math.random() * palette.length)];
+    colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
+    phases[i] = Math.random() * Math.PI * 2;
+    sizes[i] = 0.4 + Math.random() * 1.1;
+  }
 
-      // Imagen Izquierda (Labial Velvet)
-      gsap.to("#img-labial", {
-        y: 10,
-        rotation: -3,
-        duration: 2.8,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.2
-      });
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
+  geo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+  geo.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
 
-      // Imagen Derecha (Brocha)
-      gsap.to("#img-brocha", {
-        y: -14,
-        rotation: 4,
-        duration: 2.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.4
-      });
+  const mat = new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 }, uMap: { value: tex } },
+    vertexShader: `
+      attribute float aPhase;
+      attribute float aSize;
+      attribute vec3 aColor;
+      varying vec3 vColor;
+      varying float vTw;
+      uniform float uTime;
+      void main(){
+        vColor = aColor;
+        float tw = 0.55 + 0.45 * sin(uTime * 1.8 + aPhase);
+        vTw = tw;
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = aSize * tw * (300.0 / -mv.z);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: `
+      uniform sampler2D uMap;
+      varying vec3 vColor;
+      varying float vTw;
+      void main(){
+        vec4 t = texture2D(uMap, gl_PointCoord);
+        gl_FragColor = vec4(vColor, t.a * vTw * 0.9);
+      }`,
+    transparent: true,
+    depthWrite: false,
+  });
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
 
-      // Parallax al pasar mouse
-      const container = document.getElementById('hero-floating-container');
-      if (container) {
-        container.addEventListener('mousemove', (e) => {
-          const rect = container.getBoundingClientRect();
-          const relX = (e.clientX - rect.left - rect.width / 2) * 0.03;
-          const relY = (e.clientY - rect.top - rect.height / 2) * 0.03;
+  const mouse = { x: 0, y: 0 };
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
 
-          gsap.to("#img-diosr", { x: relX, y: relY, duration: 0.5 });
-          gsap.to("#img-labial", { x: relX * 0.8, y: relY * 0.8, duration: 0.5 });
-          gsap.to("#img-brocha", { x: relX * 1.2, y: relY * 1.2, duration: 0.5 });
-        });
+  const clock = new THREE.Clock();
+  (function loop() {
+    requestAnimationFrame(loop);
+    const t = clock.getElapsedTime();
+    mat.uniforms.uTime.value = t;
+    points.rotation.y = t * 0.02;
+    points.rotation.x = Math.sin(t * 0.1) * 0.05;
+    camera.position.x += (mouse.x * 4 - camera.position.x) * 0.03;
+    camera.position.y += (-mouse.y * 3 - camera.position.y) * 0.03;
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
+  })();
 
-        container.addEventListener('mouseleave', () => {
-          gsap.to("#img-diosr, #img-labial, #img-brocha", { x: 0, y: 0, duration: 0.8 });
-        });
-      }
-    }
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
 
-    // INITIALIZATION
-    document.addEventListener('DOMContentLoaded', () => {
-      renderProducts();
-      updateCartUI();
-      initGsapFloating();
-      lucide.createIcons();
-    });
-  </script>
+/* ================= GSAP ================= */
+gsap.registerPlugin(ScrollTrigger);
+
+// divide el título en letras; "Beauty" en rosa cursiva
+(function () {
+  const el = document.getElementById('heroTitle');
+  const text = el.textContent;
+  el.innerHTML = text.split('').map((ch, i) => {
+    const cls = i >= 4 ? 'hero-char text-rose italic' : 'hero-char';
+    return `<span class="${cls}">${ch}</span>`;
+  }).join('');
+})();
+
+// intro
+const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+tl.to('#loaderFill', { scaleX: 1, duration: 0.9, ease: 'power2.inOut', delay: 0.15 })
+  .to('#loader', { yPercent: -100, duration: 0.8, ease: 'power4.inOut' }, '-=0.2')
+  .from('.hero-char', { y: 120, opacity: 0, rotateX: -60, stagger: 0.04, duration: 1.1 }, '-=0.35')
+  .to('.hero-sub', { opacity: 1, y: 0, stagger: 0.15, duration: 0.9 }, '-=0.5');
+gsap.set('.hero-sub', { y: 24 });
+
+// parallax del título
+gsap.to('#heroTitle', {
+  yPercent: -30, opacity: 0.25, ease: 'none',
+  scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true },
+});
+
+// nav blur al hacer scroll
+const nav = document.getElementById('nav');
+ScrollTrigger.create({
+  start: 60,
+  onUpdate: (self) => {
+    if (self.direction === 1 && self.progress > 0) nav.classList.add('nav-blur');
+    else nav.classList.remove('nav-blur');
+  },
+});
+
+// reveals de secciones
+gsap.utils.toArray('[data-reveal]').forEach(el => {
+  gsap.from(el, {
+    y: 48, opacity: 0, duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 85%' },
+  });
+});
+
+// marquee
+gsap.to('.marquee-track', { xPercent: -50, duration: 22, repeat: -1, ease: 'none' });
+
+// contadores
+document.querySelectorAll('.counter').forEach(el => {
+  const target = +el.dataset.count;
+  const obj = { v: 0 };
+  gsap.to(obj, {
+    v: target, duration: 2, ease: 'power2.out',
+    scrollTrigger: { trigger: el, start: 'top 85%' },
+    onUpdate: () => { el.textContent = Math.round(obj.v).toLocaleString() + '+'; },
+  });
+});
+
+// estrellas decorativas que titilan
+gsap.utils.toArray('.twinkle-star').forEach((s, i) => {
+  gsap.to(s, {
+    opacity: 0.25, scale: 0.7, duration: 1 + (i % 3) * 0.5,
+    repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.3,
+  });
+});
+
+// hover micro-animaciones
+document.querySelectorAll('[data-hover]').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    const art = el.querySelector('.card-art');
+    if (art) gsap.to(art, { scale: 1.06, duration: 0.6, ease: 'power2.out' });
+  });
+  el.addEventListener('mouseleave', () => {
+    const art = el.querySelector('.card-art');
+    if (art) gsap.to(art, { scale: 1, duration: 0.6, ease: 'power2.out' });
+  });
+});
+
+/* ================= cursor personalizado ================= */
+(function () {
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  const dx = gsap.quickTo(dot, 'x', { duration: 0.12, ease: 'power3' });
+  const dy = gsap.quickTo(dot, 'y', { duration: 0.12, ease: 'power3' });
+  const rx = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' });
+  const ry = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' });
+  window.addEventListener('mousemove', (e) => {
+    dx(e.clientX - dot.offsetWidth / 2); dy(e.clientY - dot.offsetHeight / 2);
+    rx(e.clientX - ring.offsetWidth / 2); ry(e.clientY - ring.offsetHeight / 2);
+  });
+  document.querySelectorAll('[data-hover]').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('grow'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('grow'));
+  });
+})();
+
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
